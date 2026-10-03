@@ -89,6 +89,7 @@ def get_all_movies():
     Session = sessionmaker(bind=engine)
     with Session() as session:
         movies = session.query(Movie).options(selectinload(Movie.genres)).all()
+    movies = unpack_movies(movies)
     return movies
 
 
@@ -130,6 +131,7 @@ def unpack_movies(movies):
     for movie in movies:
         output.append(
             {
+                "id": movie.id,
                 "title": movie.title,
                 "relative_path": movie.relative_path,
                 "filename": movie.filename,

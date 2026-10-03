@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
-from crud import load_genres, get_all_movies
+from crud import load_genres, search_movies
 
 app = FastAPI()
 
@@ -10,7 +10,9 @@ def get_all_genres():
     return load_genres()
 
 @app.get("/movies")
-def get_films(genres:list = None):
-    if not genres:
-        return get_all_movies()
+def get_films(genres:list[str]|None = Query(default = None), title: str|None = None):
+    return search_movies(genres)
+
+
+
 

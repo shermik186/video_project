@@ -33,5 +33,5 @@ def main_api_test():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
-    #main_api_test()
+    #asyncio.run(main())
+    main_api_test()
