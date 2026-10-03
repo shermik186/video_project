@@ -1,0 +1,9 @@
+.env
+.video.log
+.venv
+__pycache__
+data
+test.py
+requierements.txt
+price.py
+genres.py
