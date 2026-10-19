@@ -11,13 +11,33 @@
 <body>
     <header>Movie library</header>
     <main>
-        <form>
-            <input type = "text" placeholder = "search films">
-            <button type = "submit"> Search</button>
-        </form>
+        
+        <input type = "text" placeholder = "search films" id="moviesNames">
+        <button id="searchBtn">Search</button><br>
+        <form id="genres"></form>
+        <p id="showMessage"><p>
+        <div class="pagination">
+            <button class = "prev-btn">Previous</button>
+            <div class = page-numbers></div>
+            <button class = "next-btn">Next</button>    
+        </div>
+
         <div id ="movie-list"></div>
+
+        
+        <div class="pagination">
+            <button class = "prev-btn">Previous</button>
+            <div class = page-numbers></div>
+            <button class = "next-btn">Next</button>    
+        </div>
     </main>
 
+    <dialog id="confirmDialog">
+        <p>Opravdu chcete tento film smazat?</p>
+        <p id="confirmFilmTitle"></p>
+        <button id="confirmYes">Ano</button>
+        <button id="confirmNo">Ne</button>
+    </dialog>
     <script src="script.js"></script>
 </body>
 </html>

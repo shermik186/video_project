@@ -10,3 +10,57 @@
     padding: 12px;
     border-radius:8px;
 }
+
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-numbers button,
+.prev-btn,
+.next-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #123456;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.page-numbers button:hover,
+.prev-btn:hover:not(:disabled),
+.next-btn:hover:not(:disabled) {
+    background: #eef1f4;
+}
+
+/* aktuální stránka */
+.page-numbers button.active {
+    background: #e4e8ec;
+    font-weight: 600;
+    cursor: default;
+}
+
+/* tři tečky */
+.page-numbers span {
+    padding: 0 6px;
+    color: #123456;
+}
+
+/* vypnutá tlačítka Předchozí a Další */
+.prev-btn:disabled,
+.next-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
