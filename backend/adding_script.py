@@ -1,13 +1,12 @@
 from database import engine
 from models import Base
-from assistant import get_response, get_paths_testing_data, get_limited_response
-from crud import add_movies, fill_genres, delete_database, load_genres
-from tools import get_paths, turn_list_to_text, create_testing_data
+from assistant import  get_limited_response
+from crud import  load_genres
+from tools import get_paths, turn_list_to_text
 import asyncio
-import uvicorn
 
 
-async def main():
+async def adding_script():
     Base.metadata.create_all(engine)
     semaphore = asyncio.Semaphore(3)
 
@@ -24,14 +23,5 @@ async def main():
     await asyncio.gather(*coros)
 
 
-def main_delete_database():
-    delete_database()
-
-
-def main_api_test():
-    uvicorn.run("api:app", host="localhost", port=8000, reload=True)
-
-
 if __name__ == "__main__":
-    #asyncio.run(main())
-    main_api_test()
+    asyncio.run(adding_script())

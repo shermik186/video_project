@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, selectinload
 from sqlalchemy import delete, select
 import logging
+from fastapi import Query
 import asyncio
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,16 @@ def delete_database():
         session.commit()
     return True
 
+def delete_film(relative_path):
+    Session = sessionmaker(bind=engine)
+    with Session() as session:
+        movie = session.query(Movie).filter_by(relative_path=relative_path).first()
+        if movie is None:
+            return False
+        session.execute(delete(movie_genres).where(movie_genres.c.movie_id == movie.id))
+        session.execute(delete(Movie).where(Movie.id == movie.id))
+        session.commit()
+    return True
 
 def get_all_movies():
     Session = sessionmaker(bind=engine)
@@ -102,10 +113,9 @@ def get_genres_ids(genres_names):
     return genres
 
 
-def search_movies(genres_name: list | None = None, title: str | None = None):
+def search_movies(genres_name: list[str]|None =Query(default = None), title: str | None = None,offset:int = 0,limit:int = 50):
     if genres_name is None:
         genres_name = []
-
     Session = sessionmaker(bind=engine)
     with Session() as session:
 
@@ -121,9 +131,13 @@ def search_movies(genres_name: list | None = None, title: str | None = None):
         if title:
             stmt = stmt.where(Movie.title.ilike(f"%{title}%"))
 
+        stmt =  stmt.order_by(Movie.title, Movie.id)
         movies = session.scalars(stmt).all()
         movies = unpack_movies(movies)
-        return movies
+        return {
+            "movies" : movies[offset:offset+limit],
+            "total" : len(movies)
+        }
 
 
 def unpack_movies(movies):
