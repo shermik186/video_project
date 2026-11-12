@@ -6,38 +6,48 @@ const state = {
     pendingDelete:null,
     
 }
+function createDiv(film, seznam) {
+    const card = document.createElement("div");
+    card.className = "movie-card";
 
-function createDiv(film,seznam){
-    const card = document.createElement("div")
-    card.className = "movie-card"
+    const info = document.createElement("div");
+    info.className = "movie-info";
+
+    const head = document.createElement("div");
+    head.className = "movie-head";
 
     const title = document.createElement("h3");
+    title.className = "movie-title";
     title.textContent = film.title;
-    
-    const genres = document.createElement("p");
+
+    const genres = document.createElement("span");
+    genres.className = "movie-genres";
     genres.textContent = film.genres.join(", ");
 
     const filename = document.createElement("p");
+    filename.className = "movie-filename";
     filename.textContent = film.filename;
 
     const path = document.createElement("p");
+    path.className = "movie-path";
     path.textContent = film.relative_path;
 
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent="DELETE";
-    deleteBtn.className="delete-btn";
-    deleteBtn.addEventListener("click",()=>{
+    deleteBtn.textContent = "DELETE";
+    deleteBtn.className = "delete-btn";
+    deleteBtn.addEventListener("click", () => {
         state.pendingDelete = film.relative_path;
-        document.getElementById("confirmFilmTitle").textContent=film.title;
-        document.getElementById("confirmDialog").showModal()
-    })
+        document.getElementById("confirmFilmTitle").textContent = film.title;
+        document.getElementById("confirmDialog").showModal();
+    });
 
+    head.append(title, genres);
+    info.append(head, filename, path);
+    card.append(info, deleteBtn);
 
-
-    card.append(title,genres,filename,path,deleteBtn)
-
-    seznam.appendChild(card)
+    seznam.appendChild(card);
 }
+
 async function fetchData(){
     try{
         const moviesNames = document.getElementById("moviesNames").value;
@@ -53,7 +63,7 @@ async function fetchData(){
             params.append("genres",genre)
         })
         
-        let url = `http://localhost:8000/movies?${params}`;
+        let url = `/movies?${params}`;
 
         const response = await fetch(url);
 
@@ -175,7 +185,7 @@ function renderPagination() {
 }   
 async function fetchGenres(){
     try{
-        let url = "http://localhost:8000/genres";
+        let url = "/genres";
         const response = await fetch(url);
         const genres = await response.json();
         console.log(genres);
@@ -195,7 +205,7 @@ function createCheckBox(genre) {
     box.type = "checkbox";
     box.value = genre;
 
-    label.append(box, " " + genre);
+    label.append(box, genre);
 
     form.appendChild(label);
 }
@@ -232,7 +242,7 @@ async function deleteMovie(relativePath){
     params.append("relative_path", relativePath);
 
     try {
-        const response = await fetch(`http://localhost:8000/movies?${params}`, {
+        const response = await fetch(`/movies?${params}`, {
             method: "DELETE",
         });
 
