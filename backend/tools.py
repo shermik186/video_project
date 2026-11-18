@@ -22,7 +22,7 @@ def scan_new_relative_paths():
     new_paths = []
     for relative_path in root.rglob("*"):
         if relative_path.suffix.lower() in suffix_set:
-            rel_path = str(relative_path.relative_to(root))
+            rel_path = relative_path.relative_to(root).as_posix()
             if rel_path not in existing_paths:
                 new_paths.append(rel_path)
 

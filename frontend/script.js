@@ -40,10 +40,20 @@ function createDiv(film, seznam) {
         document.getElementById("confirmFilmTitle").textContent = film.title;
         document.getElementById("confirmDialog").showModal();
     });
+   
+    const playBtn = document.createElement("button");
+    playBtn.textContent = "PŘEHRÁT";
+    playBtn.className = "play-btn";
+    playBtn.addEventListener("click", () => openPlayer(film));
+    const ext = film.relative_path.split(".").pop().toLowerCase();
+    if (!["mp4", "mkv", "webm"].includes(ext)) {
+        playBtn.disabled = true;
+        playBtn.title = "Tento formát prohlížeč nepřehraje";
+    }
 
     head.append(title, genres);
     info.append(head, filename, path);
-    card.append(info, deleteBtn);
+    card.append(info, playBtn,deleteBtn);
 
     seznam.appendChild(card);
 }
@@ -236,6 +246,13 @@ function showMessage(text){
     message = document.getElementById("showMessage");
     message.textContent = text;
 }
+function openPlayer(film) {
+    const player = document.getElementById("player");
+    player.src = `/stream?relative_path=${encodeURIComponent(film.relative_path)}`;
+    document.getElementById("playerDialog").showModal();
+    player.play().catch(() => {});
+}
+
 async function deleteMovie(relativePath){
  
     const params = new URLSearchParams();
@@ -278,6 +295,15 @@ document.getElementById("confirmNo").addEventListener("click",()=>{
     document.getElementById("confirmDialog").close()
 })
 
+const playerDialog = document.getElementById("playerDialog");
+playerDialog.addEventListener("close", () => {
+    const player = document.getElementById("player");
+    player.pause();
+    player.removeAttribute("src");
+    player.load();
+});
+
+document.getElementById("playerClose").addEventListener("click", () => playerDialog.close());
 getGenres();
 getData();
 

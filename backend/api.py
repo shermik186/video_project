@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 import os
+from fastapi import HTTPException
+from fastapi.responses import FileResponse
+from tools import get_root
 load_dotenv()
 
 def get_cors():
@@ -36,6 +39,14 @@ def delete_movie(relative_path:str):
     if not delete_film(relative_path):
         raise HTTPException(status_code=404, detail="Film nenalezen")
     return {"deleted": relative_path}
+
+@app.get("/stream")
+def stream(relative_path: str):
+    root = get_root().resolve()
+    file = (root / relative_path).resolve()
+    if not file.is_relative_to(root) or not file.is_file():
+        raise HTTPException(404)
+    return FileResponse(file)
 
 app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
